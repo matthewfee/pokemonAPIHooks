@@ -79,7 +79,7 @@ export const Home = () => {
       // eslint-disable-next-line react/no-array-index-key
 
       <li
-        className="max-h-40 max-w-24 border-gray-400 rounded border m-1 py-2 flex flex-col justify-center align-center text-center hover:bg-sky-200"
+        className="max-h-40 max-w-24 border-gray-400 rounded border m-1 py-2 flex flex-col justify-center align-center text-center hover:bg-sky-200 truncate"
         key={pokemon.id}
       >
         <Link href={`/pokemon/${pokemon.id}`}>
