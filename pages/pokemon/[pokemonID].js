@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 const pokemonIDPage = () => {
   const router = useRouter();
@@ -17,7 +18,6 @@ const pokemonIDPage = () => {
 
     const response = await axios.get(POKEMON_URL);
     const { data } = response;
-    console.log(data);
     setPokemon(data);
   };
 
@@ -31,7 +31,10 @@ const pokemonIDPage = () => {
 
   return (
     <div className="flex flex-col items-center p-4">
-      <h1 className="align-center font-bold capitalize text-3xl">{pokemon.name}</h1>
+      <nav className="self-start">
+        <Link href="/">Home</Link>
+      </nav>
+      <h1 className="align-center font-bold capitalize text-3xl my-8">{pokemon.name}</h1>
       {paddedID && <img src={IMG_URL} alt="Pokemon" />}
 
       <ul className="list-none text-lg">
@@ -47,7 +50,7 @@ const pokemonIDPage = () => {
         <li>Height: {pokemon.height}</li>
 
         <li className="capitalize my-4">
-          <h2 className="font-bold">Statistics</h2>
+          <h2 className="font-semibold">Statistics</h2>
           <ul className="my-2">
             {pokemon.stats?.map((item, index) => (
               // eslint-disable-next-line react/no-array-index-key
