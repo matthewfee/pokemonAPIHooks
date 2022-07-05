@@ -13,7 +13,7 @@ export const Home = () => {
       return;
     }
 
-    await setLoading(true);
+    setLoading(true);
 
     try {
       const pokemon = await axios.get(
@@ -61,43 +61,46 @@ export const Home = () => {
   }, []);
 
   useEffect(() => {
-    getPokemonDetails();
+    if (loading) {
+      return;
+    }
+
+    if (isVisible) {
+      getPokemonDetails();
+    }
   }, [isVisible]);
 
-  const increaseOffset = () => {
-    setOffset(offset + 24);
-    console.log(offset);
-  };
-
   const getPokemonNames = () =>
-    pokemonDetails.map((pokemon, index) => (
+    pokemonDetails.map((pokemon) => (
       // eslint-disable-next-line react/no-array-index-key
-      <li className="h-[100px] " key={index}>
-        {index + 1}. {pokemon.name}, ID: {pokemon.id}, Height: {pokemon.height}
+
+      <li
+        className="max-h-40 max-w-24 border-gray-400 rounded border m-1 py-2 flex flex-col justify-center align-center text-center"
+        key={pokemon.id}
+      >
+        <div className="id text-sm italic py-2">{pokemon.id}</div>
+        <h2 className="pokemon-name text-lg font-semibold py-2 capitalize">{pokemon.name}</h2>
+        <div className="types text-sm py-2">
+          {pokemon.types.map((item) => item.type.name).join(', ')}
+        </div>
       </li>
     ));
 
   return (
     <div
-      className={`flex flex-col items-center  w-screen border-blue-200 
+      className={`flex flex-col items-center  w-screen 
       border-2 p-28 m-12`}
     >
-      <h1 className="border-red-900 border-2 w-52 m-10">Pokemon</h1>
-      <button type="button" onClick={increaseOffset}>
-        Increase Offset
-      </button>
-
-      <main>
+      <h1 className="text-xl font-bold text-center w-52 m-10">Pokemon API</h1>
+      <main className="w-screen max-w-xl flex flex-col">
         <div className="pokemon-grid">
-          <h2>Details</h2>
-          <ul>
+          <ul className="w-full grid grid-cols-4">
             {getPokemonNames()}
-            <div className="h-[100px] border-red-300 border-2" ref={listInnerRef}>
-              Hidden Last Element
-            </div>
+
+            <div className="h-[10px]" ref={listInnerRef} />
           </ul>
         </div>
-        <button type="button" onClick={getPokemonDetails}>
+        <button type="button" className="w-24 self-end" onClick={getPokemonDetails}>
           LoadMore
         </button>
       </main>
