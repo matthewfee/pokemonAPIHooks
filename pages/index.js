@@ -1,6 +1,8 @@
 import axios from 'axios';
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
+import PokemonName from '../components/PokemonName';
+import { gridItemsCount } from '../constants/constants';
 
 export const Home = () => {
   const [pokemonDetails, setPokemonDetails] = useState([]);
@@ -19,11 +21,11 @@ export const Home = () => {
       // get list of more pokemon
 
       const pokemon = await axios.get(
-        `https://pokeapi.co/api/v2/pokemon/?limit=16&offset=${offset}`
+        `https://pokeapi.co/api/v2/pokemon/?limit=${gridItemsCount}&offset=${offset}`
       );
       const urlData = await pokemon.data.results;
 
-      // get specific details for each new pokemon
+      // use URLto request specific details for each new pokemon
 
       const promises = [];
 
@@ -39,13 +41,17 @@ export const Home = () => {
 
       // update offset
 
-      setOffset((prev) => prev + 16);
+      setOffset((prev) => prev + gridItemsCount);
     } catch (error) {
       console.error(error);
     }
   };
 
+  // ref for intersection observer
+
   const listInnerRef = useRef();
+
+  // creates intersection observer to check when user scrolls to bottom of page
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -64,6 +70,8 @@ export const Home = () => {
     };
   }, []);
 
+  // if ref is visible, then generate more pokemon from API
+
   useEffect(() => {
     if (loading) {
       return;
@@ -74,25 +82,9 @@ export const Home = () => {
     }
   }, [isVisible]);
 
-  const getPokemonNames = () =>
-    pokemonDetails.map((pokemon) => (
-      // eslint-disable-next-line react/no-array-index-key
+  // generates list of pokemon names from API
 
-      <li
-        className="max-h-40 max-w-24 border-gray-400 rounded border m-1 py-2 flex flex-col justify-center align-center text-center hover:bg-sky-200 truncate"
-        key={pokemon.id}
-      >
-        <Link href={`/pokemon/${pokemon.id}`}>
-          <div className="cursor-pointer ">
-            <div className="id text-sm italic py-2">{pokemon.id}</div>
-            <h2 className="pokemon-name text-lg font-semibold py-2 capitalize">{pokemon.name}</h2>
-            <div className="types text-sm py-2">
-              {pokemon.types.map((item) => item.type.name).join(', ')}
-            </div>
-          </div>
-        </Link>
-      </li>
-    ));
+  const getPokemonNames = () => pokemonDetails.map((pokemon) => <PokemonName pokemon={pokemon} />);
 
   return (
     <div

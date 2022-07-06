@@ -3,6 +3,8 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
+// individual page for pokemon information
+
 const pokemonIDPage = () => {
   const router = useRouter();
   const { pokemonID } = router.query;
